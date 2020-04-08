@@ -1,6 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import Table from '../'
+import Table from '..'
 
 describe('Table', () => {
   let wrapper
