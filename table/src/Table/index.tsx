@@ -76,6 +76,7 @@ export const Table: React.FC<TableProps> = ({ columns, rows, loading }) => {
         </Styles.Row>
       ));
     }
+    return null;
   };
 
   const renderTableHeader = () => {

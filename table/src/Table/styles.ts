@@ -31,12 +31,14 @@ export const HeaderCell = styled.th<{ isCurrentSortColumn?: boolean }>`
   color: ${({ isCurrentSortColumn }) =>
     isCurrentSortColumn ? "#5D3AD7" : "#100730"};
   display: flex;
+  flex-wrap: wrap;
   margin: 0 auto;
   align-items: center;
+  justify-content: flex-start;
 `;
 
 export const Cell = styled.td`
-  padding: 12px 4px;
+  padding: 16px 4px;
   align-self: center;
   text-align: center;
   color: #455676;
@@ -49,7 +51,7 @@ export const Cell = styled.td`
 
 export const Caret = styled.span<{ direction: SortDirection }>`
   position: relative;
-  height: 3px;
+  width: 5px;
   height: ${({ direction }) => (direction === "desc" ? "3px" : "6px")};
   left: 5px;
   &:before {
