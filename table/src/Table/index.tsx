@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import * as Styles from "./styles";
 import { TableProps, SortDirection } from "./types";
 import orderby from "lodash.orderby";
+import get from "lodash.get";
 
 export const Table: React.FC<TableProps> = ({ columns, rows, loading }) => {
   const [currentSortColumn, setCurrentSortColumn] = useState<number | null>(
@@ -61,15 +62,20 @@ export const Table: React.FC<TableProps> = ({ columns, rows, loading }) => {
   };
 
   const renderRows = () => {
-    return sortedRows.map((row) => (
-      <Styles.Row key={`${row.name}_row`}>
-        {columns.map((col) => (
-          <Styles.Cell key={`${row.name}_cell_${col.selector}`}>
-            {col.renderer ? col.renderer(row[col.selector]) : row[col.selector]}
-          </Styles.Cell>
-        ))}
-      </Styles.Row>
-    ));
+    if (!loading) {
+      return sortedRows.map((row) => (
+        <Styles.Row key={`${row.name}_row`}>
+          {columns.map((col) => {
+            const cellValue = get(row, col.selector);
+            return (
+              <Styles.Cell key={`${row.name}_cell_${col.selector}`}>
+                {col.renderer ? col.renderer(cellValue) : cellValue}
+              </Styles.Cell>
+            );
+          })}
+        </Styles.Row>
+      ));
+    }
   };
 
   const renderTableHeader = () => {
@@ -91,12 +97,17 @@ export const Table: React.FC<TableProps> = ({ columns, rows, loading }) => {
   };
 
   return (
-    <Styles.Table columnCount={columns.length}>
-      <thead>
-        <Styles.Row>{renderTableHeader()}</Styles.Row>
-      </thead>
+    <>
+      <Styles.Table columnCount={columns.length}>
+        <thead>
+          <Styles.Row>{renderTableHeader()}</Styles.Row>
+        </thead>
 
-      <tbody>{loading ? "Loading..." : renderRows()}</tbody>
-    </Styles.Table>
+        <tbody>{renderRows()}</tbody>
+      </Styles.Table>
+      {loading ? (
+        <Styles.LoadingContainer>Loading...</Styles.LoadingContainer>
+      ) : null}
+    </>
   );
 };
