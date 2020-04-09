@@ -79,3 +79,8 @@ export const Caret = styled.span<{ direction: SortDirection }>`
     border-right: 4px solid transparent;
   }
 `;
+
+export const LoadingContainer = styled.div`
+  text-align: center;
+  margin-top: 12px;
+`;
