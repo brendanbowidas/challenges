@@ -1,23 +1,53 @@
-import React from 'react';
-import logo from './logo.svg';
-import Table from './Table'
-import './App.css';
+import React from "react";
+import { Table } from "./Table";
+import "./App.css";
+import data from "./Table/mockData";
+import { TableColumn } from "./Table/types";
+import { formatDate, sortByDateNumeric, sortByNumberString } from "./utils";
 
-class App extends React.Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-        </header>
+const columns: TableColumn[] = [
+  {
+    label: "Name",
+    selector: "name",
+  },
+  {
+    label: "Height",
+    selector: "height",
+    sort: sortByNumberString,
+  },
+  {
+    label: "Mass",
+    selector: "mass",
+    sort: sortByNumberString,
+  },
+  {
+    label: "Hair Color",
+    selector: "hair_color",
+  },
+  {
+    label: "Eye Color",
+    selector: "eye_color",
+  },
+  {
+    label: "Created",
+    selector: "created",
+    renderer: formatDate,
+    sort: sortByDateNumeric,
+  },
+  {
+    label: "Edited",
+    selector: "edited",
+    renderer: formatDate,
+    sort: sortByDateNumeric,
+  },
+];
 
-        <Table />
-      </div>
-    );
-  }
-}
+const App: React.FC = () => {
+  return (
+    <div className="TableContainer">
+      <Table columns={columns} rows={data} />
+    </div>
+  );
+};
 
 export default App;
