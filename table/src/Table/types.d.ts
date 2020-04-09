@@ -2,6 +2,7 @@ export interface TableProps {
   columns: TableColumn[];
   rows: any[];
   loading?: boolean;
+  uniqueKeyField?: string;
 }
 
 export interface TableColumn {

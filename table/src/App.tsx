@@ -85,7 +85,7 @@ const App: React.FC = () => {
 
   return (
     <div className="TableContainer">
-      <Table columns={columns} rows={data} loading={isLoading} />
+      <Table columns={columns} rows={data} loading={isLoading} uniqueKeyField="name" />
     </div>
   );
 };

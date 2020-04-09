@@ -4,7 +4,12 @@ import { TableProps, SortDirection } from "./types";
 import orderby from "lodash.orderby";
 import get from "lodash.get";
 
-export const Table: React.FC<TableProps> = ({ columns, rows, loading }) => {
+export const Table: React.FC<TableProps> = ({
+  columns,
+  rows,
+  loading,
+  uniqueKeyField = "id",
+}) => {
   const [currentSortColumn, setCurrentSortColumn] = useState<number | null>(
     null
   );
@@ -63,18 +68,22 @@ export const Table: React.FC<TableProps> = ({ columns, rows, loading }) => {
 
   const renderRows = () => {
     if (!loading) {
-      return sortedRows.map((row) => (
-        <Styles.Row key={`${row.name}_row`}>
-          {columns.map((col) => {
-            const cellValue = get(row, col.selector);
-            return (
-              <Styles.Cell key={`${row.name}_cell_${col.selector}`}>
-                {col.renderer ? col.renderer(cellValue) : cellValue}
-              </Styles.Cell>
-            );
-          })}
-        </Styles.Row>
-      ));
+      return sortedRows.map((row) => {
+        const keyValue = row[uniqueKeyField];
+
+        return (
+          <Styles.Row key={`${keyValue}_row`}>
+            {columns.map((col) => {
+              const cellValue = get(row, col.selector);
+              return (
+                <Styles.Cell key={`${keyValue}_cell_${col.selector}`}>
+                  {col.renderer ? col.renderer(cellValue) : cellValue}
+                </Styles.Cell>
+              );
+            })}
+          </Styles.Row>
+        );
+      });
     }
     return null;
   };
