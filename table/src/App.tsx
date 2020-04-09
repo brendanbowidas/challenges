@@ -5,7 +5,7 @@ import mockData from "./Table/mockData";
 import { TableColumn } from "./Table/types";
 import { formatDate, sortByDateNumeric, sortByNumberString } from "./utils";
 
-const columns: TableColumn[] = [
+export const columns: TableColumn[] = [
   {
     label: "Name",
     selector: "name",
