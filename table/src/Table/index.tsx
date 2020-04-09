@@ -3,11 +3,11 @@ import * as Styles from "./styles";
 import { TableProps, SortDirection } from "./types";
 import orderby from "lodash.orderby";
 
-export const Table: React.FC<TableProps> = ({ columns, rows }) => {
+export const Table: React.FC<TableProps> = ({ columns, rows, loading }) => {
   const [currentSortColumn, setCurrentSortColumn] = useState<number | null>(
     null
   );
-  const [sortedRows, setSortedRows] = useState<any[]>(rows);
+  const [sortedRows, setSortedRows] = useState<any[]>([]);
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
 
   useEffect(
@@ -17,6 +17,15 @@ export const Table: React.FC<TableProps> = ({ columns, rows }) => {
       }
     },
     [currentSortColumn, sortDirection]
+  );
+
+  useEffect(
+    () => {
+      if (rows && rows.length) {
+        setSortedRows(rows);
+      }
+    },
+    [rows]
   );
 
   const handleHeaderCellClick = (idx) => {
@@ -51,38 +60,43 @@ export const Table: React.FC<TableProps> = ({ columns, rows }) => {
     }
   };
 
+  const renderRows = () => {
+    return sortedRows.map((row) => (
+      <Styles.Row key={`${row.name}_row`}>
+        {columns.map((col) => (
+          <Styles.Cell key={`${row.name}_cell_${col.selector}`}>
+            {col.renderer ? col.renderer(row[col.selector]) : row[col.selector]}
+          </Styles.Cell>
+        ))}
+      </Styles.Row>
+    ));
+  };
+
+  const renderTableHeader = () => {
+    return columns.map((col, idx) => {
+      const isCurrentSortColumn = currentSortColumn === idx;
+      return (
+        <Styles.HeaderCell
+          onClick={handleHeaderCellClick(idx)}
+          key={`${col.label}_${col.selector}`}
+          isCurrentSortColumn={isCurrentSortColumn}
+        >
+          {col.label}
+          {isCurrentSortColumn ? (
+            <Styles.Caret direction={sortDirection} />
+          ) : null}
+        </Styles.HeaderCell>
+      );
+    });
+  };
+
   return (
     <Styles.Table columnCount={columns.length}>
       <thead>
-        <Styles.Row>
-          {columns.map((col, idx) => (
-            <Styles.HeaderCell
-              onClick={handleHeaderCellClick(idx)}
-              key={`${col.label}_${col.selector}`}
-              isCurrentSortColumn={currentSortColumn === idx}
-            >
-              {col.label}
-              {currentSortColumn === idx ? (
-                <Styles.Caret direction={sortDirection} />
-              ) : null}
-            </Styles.HeaderCell>
-          ))}
-        </Styles.Row>
+        <Styles.Row>{renderTableHeader()}</Styles.Row>
       </thead>
 
-      <tbody>
-        {sortedRows.map((row) => (
-          <Styles.Row key={`${row.name}_row`}>
-            {columns.map((col) => (
-              <Styles.Cell key={`${row.name}_cell_${col.selector}`}>
-                {col.renderer
-                  ? col.renderer(row[col.selector])
-                  : row[col.selector]}
-              </Styles.Cell>
-            ))}
-          </Styles.Row>
-        ))}
-      </tbody>
+      <tbody>{loading ? "Loading..." : renderRows()}</tbody>
     </Styles.Table>
   );
 };
