@@ -1,0 +1,15 @@
+NOTE: the provided Star Wars API was down at the time that I was implementing the data fetching, so I had to replace it with a mock implementation.
+
+The Table component accepts the following props:
+
+rows - the data to be rendered by the table, assumed to be an array of objects.
+
+columns - an array of objects that define the table columns with the following properties:
+    "label" - the value to display in the table header for the given column
+    "selector" - the property on the row item in which the data for the column is located e.g. "name" or "address.street"
+    "renderer" - an optional function which allows custom formatting of a particular table cell
+    "sort" - an optional function that allows for custom sorting of a given column. Users lodash.orderby by default
+
+loading - boolean that controls the loading indicator
+
+uniqueKeyField - allows the user to define the property to use as the "key" prop when mapping through the rows. Defaults to "id"
